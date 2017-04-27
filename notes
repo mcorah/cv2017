@@ -1,0 +1,43 @@
+BSR:
+  cd grouping/source
+  # see readme
+  # possibly slightly modify ld_preload
+  export
+  LD_PRELOAD=/lib/x86_64-linux-gnu/libc.so.6:/usr/lib/x86_64-linux-gnu/libstdc++.so.6:/lib/x86_64-linux-gnu/libgcc_s.so.1
+  # edit gpb_src/Rules.make (matlab)
+  # in grouping/source
+  source build.sh
+
+vlfeat:
+  make
+
+# moving on to liblinear since that should be simpler
+liblinear-2.11:
+  # in top level
+  make clean; make;
+  cd matlab
+  # Edit makefile with matlab install (e.g. /usr/local/MATLAB/R2015a)
+  make;
+  # produced train.mexa64 and predict.mexa64 as expected
+
+liblinear dense:
+  # in top level folder
+  make clean; make;
+  cd matlab
+  # Edit makefile with matlab install as for standard liblinear
+  # Change "\#" to "=" in makefile. No I don't know why.
+  mv predict.mexa64 predictDense.mexa64
+  mv train.mexa64 trainDense.mexa64
+  # It may be necessary to do more to make sure the different versions of
+  # liblinear don't conflict
+
+colordescriptors:
+  ????
+
+ImageStack:
+  # in makefiles/Makefile.linux
+  # commented out SDL... was not working
+  # commented out fftw
+  make -f makefiles/Makefile.linux clean
+  make -f makefiles/Makefile.linux
+  # build completed, hopefully deleted dependencies aren't critical
