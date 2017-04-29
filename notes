@@ -1,3 +1,7 @@
+###########################
+# Installation of externals
+###########################
+
 BSR:
   cd grouping/source
   # see readme
@@ -10,6 +14,7 @@ BSR:
 
 vlfeat:
   make
+  ln -s <vlfeat dir> vlfeat # so they can find the package
 
 # moving on to liblinear since that should be simpler
 liblinear-2.11:
@@ -41,3 +46,27 @@ ImageStack:
   make -f makefiles/Makefile.linux clean
   make -f makefiles/Makefile.linux
   # build completed, hopefully deleted dependencies aren't critical
+
+#######
+# Setup
+#######
+
+edited paths in COM/getPaths.m and allBenchmarks/benchmarkPaths.m as per
+instructions
+
+created miniture nyu split using mini_nyu.m
+edited getImageSet to use smaller splits for dev purposes
+
+Unfortunately, it complains about directories existing.
+There might be a script for these, but otherwise, just create them as you see
+them?
+
+Complains about ucm features? Run ucm stuff first?
+
+
+###########
+# Execution
+###########
+
+startup
+wrapperSegmentation
