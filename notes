@@ -6,8 +6,7 @@ BSR:
   cd grouping/source
   # see readme
   # possibly slightly modify ld_preload
-  export
-  LD_PRELOAD=/lib/x86_64-linux-gnu/libc.so.6:/usr/lib/x86_64-linux-gnu/libstdc++.so.6:/lib/x86_64-linux-gnu/libgcc_s.so.1
+  export LD_PRELOAD=/lib/x86_64-linux-gnu/libc.so.6:/usr/lib/x86_64-linux-gnu/libstdc++.so.6:/lib/x86_64-linux-gnu/libgcc_s.so.1
   # edit gpb_src/Rules.make (matlab)
   # in grouping/source
   source build.sh
@@ -47,6 +46,10 @@ ImageStack:
   make -f makefiles/Makefile.linux
   # build completed, hopefully deleted dependencies aren't critical
 
+  # Apparently they want the binary in the top directory of external...
+  mv ImageStack ImageStack_dir
+  ln -s ImageStack_dir/bin/ImageStack .
+
 #######
 # Setup
 #######
@@ -63,6 +66,8 @@ them?
 
 Complains about ucm features? Run ucm stuff first?
 
+Seems that they have a bunch of files of the form wrapper*.m to compute the
+various steps.
 
 ###########
 # Execution
