@@ -17,17 +17,17 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 	Xf = pcf(:,:,1); Yf = pcf(:,:,2); Zf = pcf(:,:,3);
 
 	[h w] = size(Z);
-	mcN = zeros([size(Z) nori]);
-	mcD = zeros([size(Z) nori]);
+	mcN = zeros([size(Z) nori], 'gpuArray');
+	mcD = zeros([size(Z) nori], 'gpuArray');
 
 	thetaQ = -([0:1:(nori-1)]./nori*pi - pi/2);
 	
-	N{1} = NaN([size(Z) 3]);
-	N{2} = NaN([size(Z) 3]);
-	D{1} = NaN([size(Z) 3]);
-	D{2} = NaN([size(Z) 3]);
-	cntr{1} = NaN([h w 3]);
-	cntr{2} = NaN([h w 3]);
+	N{1} = NaN([size(Z) 3], 'gpuArray');
+	N{2} = NaN([size(Z) 3], 'gpuArray');
+	D{1} = NaN([size(Z) 3], 'gpuArray');
+	D{2} = NaN([size(Z) 3], 'gpuArray');
+	cntr{1} = NaN([h w 3], 'gpuArray');
+	cntr{2} = NaN([h w 3], 'gpuArray');
 	xyz = cat(3, Xf, Yf, Zf);
 	
 	% qZ1 = qzc*ordfilt2(Zf,1,ones(2*rr+1)).^2;

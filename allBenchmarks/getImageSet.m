@@ -1,13 +1,14 @@
 function [imName, im] = getImageSet(imSet, fileName)
 % function im = getImageSet(imSet, fileName)
 	if(nargin < 2)
-		fName = 'nyusplits';
+% 		fName = 'nyusplits';
+	        fName = 'nyusplits_mini';
 	end
 
 	c = benchmarkPaths(0);
 	outFileName = sprintf('%s/metadata/%s.mat',c.benchmarkDataDir, fName);
 	dt = load(outFileName);
-	dt.all = union(dt.trainval, dt.test);
+ 	dt.all = union(dt.trainval, dt.test);
 	a = regexp(imSet, '_', 'split');
 	if(strcmp(a{1}, 'img'))
 		im = imNameToNum(imSet);
