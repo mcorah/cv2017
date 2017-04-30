@@ -1,11 +1,11 @@
 function paths = getPaths(doMkdir)
 	%% Data dir
-	paths.dataDir = fullfile('/work3/', 'sgupta', 'cvpr13Release', 'data');
+	paths.dataDir = fullfile('.','data');
 		paths.pcDir = fullfile(paths.dataDir, 'pointCloud');
 		paths.colorImageDir = fullfile(paths.dataDir, 'colorImage');
 
 	%% Cache dir
-	paths.cacheDir = fullfile('/work3', 'sgupta', 'cvpr13Release', 'cachedir');
+	paths.cacheDir = fullfile('.', 'cachedir');
 
 	RUNNAME = 'release';
 	paths.runDir = fullfile(paths.cacheDir, RUNNAME);
@@ -35,7 +35,7 @@ function paths = getPaths(doMkdir)
 	%% Path for the image stack library ..
 	pathstr = fileparts(mfilename('fullpath'));
 		paths.siftLib = fullfile(pathstr, '..', 'external', 'colorDescriptor');
-		paths.imageStackLib = fullfile(pathstr, '..', 'external', 'ImageStack');
+		paths.imageStackLib = fullfile(pathstr, '..', 'external', 'ImageStack', 'bin', 'ImageStack');
 
 	if(exist('doMkdir', 'var') && doMkdir)
 		f = fieldnames(paths);

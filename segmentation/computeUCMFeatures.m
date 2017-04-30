@@ -39,9 +39,11 @@ function computeUCMFeatures(imSet, paths, forTraining)
 			pcf = getFilledPointCloud(imName);
 
 			try
+                %Have to replace computeDepthCues in computeLocalCues
 				[bg, cga, cgb, tg, ng1, ng2, dg, z, cues] = computeLocalCues(imName, paths, I, pc, pcf, param);
 				[img_features, img_ids, sPb2, thr, ucm2] = compute_image_features(cues, dt); %This is not the final UCM yet.
 				parsave(fileName, 'img_features', img_features, 'thr', thr, 'img_ids', img_ids, 'sPb2', sPb2, 'ucm2', ucm2);
+                fprintf('Completed Local Cues for image %s.\n', imName);
 			catch ee
 				prettyexception(ee);
 				fprintf('Something went wrong while computing UCM cues for image %s.\n', imName);

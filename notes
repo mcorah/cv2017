@@ -41,8 +41,8 @@ colordescriptors:
 
 ImageStack:
   # in makefiles/Makefile.linux
-  # commented out SDL... was not working
-  # commented out fftw
+  # If fftw doesn't work, install libfftw3-dev
+  # If you have dsymlink@GLIBC error, then go into Makefile.common, and in line 81, at the very end after "$(BIN_TARGET)" add "-ldl"
   make -f makefiles/Makefile.linux clean
   make -f makefiles/Makefile.linux
   # build completed, hopefully deleted dependencies aren't critical
@@ -50,6 +50,17 @@ ImageStack:
 #######
 # Setup
 #######
+
+Make sure in external/ you have the ImageStack folder named as "ImageStack" and not "imagestack"
+In getPaths, change end of line 38, from "'external', 'ImageStack');" to "'external', 'ImageStack', 'bin', 'ImageStack');"
+
+In segmentation/computeLocalCues line 6, add 
+"
+dName = fullfile(paths.colorCues);
+		if(~exist(dName, 'dir'))
+			mkdir(dName);
+		end
+"
 
 edited paths in COM/getPaths.m and allBenchmarks/benchmarkPaths.m as per
 instructions
@@ -63,6 +74,12 @@ them?
 
 Complains about ucm features? Run ucm stuff first?
 
+#####################
+Reduce training size
+#####################
+
+Use Micah's mini_nyu.m to generate ../data/benchmarkData/metadata/nyusplits_mini.mat
+In allBenchmarks/getImageSet.m, change line 4 from "fName = 'nyusplits';" to "fName = 'nyusplits_mini';"
 
 ###########
 # Execution

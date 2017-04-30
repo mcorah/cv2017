@@ -3,7 +3,11 @@ function [bg, cga, cgb, tg, ng1, ng2, dg, z, cues] = computeLocalCues(imName, pa
 	%% Compute the local appearance cues
 	try 
 		fileName = fullfile(paths.colorCues, strcat(imName, '.mat'));
-		load(fileName);
+        dName = fullfile(paths.colorCues);
+		if(~exist(dName, 'dir'))
+			mkdir(dName);
+		end
+        load(fileName);
 	catch
 		[bg, cga, cgb, tg] = computeColorCues(I, param.colorParam);
 		fileName = fullfile(paths.colorCues, strcat(imName, '.mat'));
