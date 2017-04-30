@@ -11,7 +11,7 @@ f = struct('computeLocalCues', true, 'collectFeatures', true, 'trainSVMs', true,
 
 %% Compute the local cues for computing the UCM
 if(f.computeLocalCues)
-	computeUCMFeatures('train', paths, true);
+	computeUCMFeatures('trainval', paths, true);
 	computeUCMFeatures('test', paths, false);
 	fprintf('Computed all local boundary cues DONE\n');
 end
