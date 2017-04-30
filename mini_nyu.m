@@ -2,7 +2,7 @@ clear all; close all; clc
 
 disp('shrinking nyusplpits.mat to create nuyusplits_mini.mat')
 
-reduction_factor = 40;
+reduction_factor = 100;
 
 load('../data/benchmarkData/metadata/nyusplits.mat')
 val = val(1:floor(end/reduction_factor));

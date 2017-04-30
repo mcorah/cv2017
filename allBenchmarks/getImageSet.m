@@ -1,8 +1,7 @@
 function [imName, im] = getImageSet(imSet, fileName)
 % function im = getImageSet(imSet, fileName)
 	if(nargin < 2)
-% 		fName = 'nyusplits';
-	        fName = 'nyusplits_mini';
+		fName = 'nyusplits_mini';
 	end
 
 	c = benchmarkPaths(0);
