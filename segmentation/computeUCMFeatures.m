@@ -22,7 +22,7 @@ function computeUCMFeatures(imSet, paths, forTraining)
 		end
 	end
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		tt = tic();
 		sPb2 = []; thr = [];
 		imName = imList{i};
