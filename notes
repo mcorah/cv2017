@@ -3,6 +3,7 @@
 ###########################
 
 BSR:
+  # Make sure you copy the revised external/.cpp, external/.m, external/.m.patch, external/.cpp.patch files to BSR/grouping/source/buildW
   cd grouping/source
   # see readme
   # possibly slightly modify ld_preload
@@ -56,6 +57,7 @@ ImageStack:
 
 Make sure in external/ you have the ImageStack folder named as "ImageStack" and not "imagestack"
 In getPaths, change end of line 38, from "'external', 'ImageStack');" to "'external', 'ImageStack', 'bin', 'ImageStack');"
+If NOT this, then make sure you copy the binary to the top directory as in the ImageStack notes above
 
 In segmentation/computeLocalCues line 6, add 
 "

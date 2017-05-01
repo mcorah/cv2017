@@ -26,6 +26,10 @@ function computeUCMFeatures(imSet, paths, forTraining)
 		tt = tic();
 		sPb2 = []; thr = [];
 		imName = imList{i};
+        dName = fullfile(paths.ucmFDir);
+		if(~exist(dName, 'dir'))
+			mkdir(dName);
+		end
 		fileName = fullfile(paths.ucmFDir, sprintf('%s.mat', imName));
 		try
 			dt1 = load(fileName); 
@@ -52,6 +56,10 @@ function computeUCMFeatures(imSet, paths, forTraining)
 	
 		if(forTraining)
 			% Compute the ground truth to use for the boundary candidates..
+            dName = fullfile(paths.ucmGTDir);
+            if(~exist(dName, 'dir'))
+                mkdir(dName);
+            end
 			gtOutFile = fullfile(paths.ucmGTDir, sprintf('%s.mat', imName))
 			try
 				dt2 = load(gtOutFile);
@@ -63,6 +71,7 @@ function computeUCMFeatures(imSet, paths, forTraining)
 					ucm_gto = transferGroundTruth(groundTruth, sPb2, thr);
 					parsave(gtOutFile, 'ucm_gto', ucm_gto);
 				catch e
+                    prettyexception(e);
 					fprintf('Something went wrong while computing ground truth for image %s.\n', imName);
 				end
 			end

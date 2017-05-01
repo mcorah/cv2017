@@ -16,6 +16,10 @@ function [bg, cga, cgb, tg, ng1, ng2, dg, z, cues] = computeLocalCues(imName, pa
 	
 	%% Code to compute the depth and normal cues
 	try 
+        dName = fullfile(paths.depthCues);
+        if(~exist(dName, 'dir'))
+			mkdir(dName);
+        end
 		fileName = fullfile(paths.depthCues, strcat(imName, '.mat'));
 		load(fileName);
 	catch
