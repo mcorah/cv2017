@@ -3,7 +3,10 @@
 ###########################
 
 BSR:
-  # Make sure you copy the revised external/.cpp, external/.m, external/.m.patch, external/.cpp.patch files to BSR/grouping/source/buildW
+  # Make sure you copy the revised 
+  # external/buildW.cpp and external/buildW.cpp.patch files to BSR/grouping/source/buildW
+  # external/match_segmentations2.m, external/match_segmentations2.m.patch to BSR/bench/benchmarks, 
+  # external/ucm_mean_pb.cpp and external/ucm_mean_pb.cpp.patch files to BSR/grouping/source/ucm
   cd grouping/source
   # see readme
   # possibly slightly modify ld_preload
