@@ -5,12 +5,12 @@ function outputFileName = testSceneModel(imSet, paths, modelFileName)
 
 	trainingParam = dt.trainingParam;
 
-	parfor j = 1:length(imList),
+	for j = 1:length(imList),
 		f{j} = getSceneFeatures(imList{j}, paths, trainingParam.featureParam);
 	end
 	F = cat(2, f{:});
 
-	[sc2, pr2, ~] = svmMulticlassTest(dt.model, F);	
+	[sc2, pr2, ~] = svmMulticlassTest(dt.model, F);
 	scores = pr2;
 	rawScores = sc2;
 
@@ -20,7 +20,7 @@ function outputFileName = testSceneModel(imSet, paths, modelFileName)
 
 	outputFileName = fullfile(paths.sceneOutsDir, strcat(sprintf('scene-%s_%s_%s', trainingParam.featureParam.featureStr, trainingParam.fileSuffix, imSet), '.mat'));
 	%Save the classifier and the predictions...
-	
+
 	save(outputFileName, '-STRUCT', 'outp');
 
 end

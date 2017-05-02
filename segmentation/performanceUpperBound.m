@@ -7,14 +7,14 @@ function [ucmThresh, meanNSP, evalRes] = performanceUpperBound(nSP, imSet, paths
 	for i = 1:length(nSP),
 		[ucmThresh(i), meanNSP(i)] = computeSPThreshold('train', nSP(i));
 		ucmThresh(i) = round(ucmThresh(i)*100)./100;
-		
+
 		% Write out the output isng the ground truth
 		outputDir = fullfile(paths.outsDir, strcat(sprintf('%s_%02d', 'upperBound', round(ucmThresh(i)*100))));
 		if(~exist(outputDir)) mkdir(outputDir); end
 
-		parfor j = 1:length(imList),
+		for j = 1:length(imList),
 			fileName = fullfile(outputDir, strcat(imList{j}, '.mat'));
-			
+
 			% Load the superpixels
 			[superpixels, ~, nSPi] = getSuperpixels(imList{j}, ucmThresh(i));
 

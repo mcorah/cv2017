@@ -2,14 +2,14 @@ function evalRes = benchmarkAmodal(amodalDir, modelname, imSet, param)
 	imList = getImageSet(imSet);
 	c = benchmarkPaths(false);
 
-	%% 
-	% param.ind is the ind from the affinity cluster matrix to use... 
+	%%
+	% param.ind is the ind from the affinity cluster matrix to use...
 	ind = param.ind;
 
 	%% Create the directory.
 	bDir = fullfile(c.amodalTmpDir, sprintf('amodal-%s_%s', modelname, imSet), sprintf('%d', ind));
 	inDir = fullfile(bDir, 'output');
-	outDir = fullfile(bDir, 'benchmarks'); 
+	outDir = fullfile(bDir, 'benchmarks');
 	if(exist(bDir, 'dir'))
 		fprintf('%s already exists, deleting it!!\n', bDir);
 		rmdir(bDir, 's');
@@ -20,19 +20,19 @@ function evalRes = benchmarkAmodal(amodalDir, modelname, imSet, param)
 
 	nsegs = zeros(length(imList), 1);
 	%Copy the amodal completions to that directory..
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		imName = imList{i};
 		dt = load(fullfile(amodalDir, strcat(imName, '.mat')), 'clusters', 'superpixels');
 		segs1 = uint16(dt.superpixels);
-	
-		clusterI = dt.clusters(:,ind); 
+
+		clusterI = dt.clusters(:,ind);
 		amodal = clusterI(dt.superpixels);
 		new_reg = (accumarray(dt.clusters(:,ind),1) > 1);
 
 		segs2 = uint16(cmunique(amodal.*new_reg(amodal)));
 		nsegs(i) = max(segs1(:)) + max(segs2(:));
 		segs2 = uint16(cmunique(amodal)+1);
-		
+
 		fprintf('.');
 		outFileName = fullfile(inDir, strcat(imName, '.mat'));
 		parsave(outFileName, 'segs', {segs1, segs2});
@@ -40,7 +40,7 @@ function evalRes = benchmarkAmodal(amodalDir, modelname, imSet, param)
 	fprintf('\n');
 
 	% Run the evaluatons..
-	gtDir = c.benchmarkGtDir; 
+	gtDir = c.benchmarkGtDir;
 
 	for i = 1:length(imList),
 		imName = imList{i};

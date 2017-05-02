@@ -89,7 +89,7 @@ if(f.doAmodalCompletion)
 	load(allResultsFileName, 'th');
 	amodalParam = struct('thresh', [-1 26], 'ucmThresh', th.ucmThresh);
 	imList = getImageSet('all');
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		% Do amodal completion with them and save them.
 		imName = imList{i};
 		ucm2 = getUCM(imName);

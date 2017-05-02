@@ -17,12 +17,12 @@ function evalRes = benchmarkSSInternal(outp, imSet, param)
 	dt = getMetadata(infoFile);
 	nclasses = length(dt.className);
 	imList = getImageSet(imSet);
-	
+
 	tp = zeros(length(threshPR), nclasses);
 	fp = tp; fn = tp; tn = tp;
 	rawcounts = zeros([nclasses+1, nclasses+1, length(threshIU)]);
 
-	parfor i = 1:length(imList)
+	for i = 1:length(imList)
 		prob = getProbCube(outp, imList{i}, nclasses);
 		gtim = getGroundTruth(imList{i}, 'segmentation', infoFile);
 		[TP(:,:,i), FP(:,:,i), TN(:,:,i), FN(:,:,i), RAWCOUNTS(:,:,:,i)] = segmentationMetrics(prob, gtim, threshPR, threshIU);
@@ -35,7 +35,7 @@ function evalRes = benchmarkSSInternal(outp, imSet, param)
 	fn = sum(FN,3);
 	rawcounts = sum(RAWCOUNTS, 4);
 	fprintf('\n');
-	
+
 	%Calculate the classwise APs.
 	detailsAP = [];
 	if(length(threshPR) > 0)
@@ -64,7 +64,7 @@ function evalRes = benchmarkSSInternal(outp, imSet, param)
 		fwavacc = (freq'*accuracies)./sum(freq);
 		detailsIU = struct('accuracies', accuracies, 'avacc', avacc, 'fwavacc', fwavacc, 'threshIU', threshIU, 'freq', freq);
 	end
-	
+
 	% Calculate for the supplied single threshold
 	rawcounts = zeros(size(rawCountsAll{1}));
 	for i = 1:length(rawCountsAll),
@@ -80,10 +80,10 @@ function evalRes = benchmarkSSInternal(outp, imSet, param)
 	freq = freq(2:end);
 	avacc = mean(accuracies);
 	fwavacc = (freq'*accuracies)./sum(freq);
-	
+
 	conf = 100*bsxfun(@rdivide, rawcounts, sum(rawcounts,2)+(sum(rawcounts,2)==0));
 
-	className = dt.className; 
+	className = dt.className;
 
 	evalRes.accuracies = accuracies;
 	evalRes.avacc = avacc;
