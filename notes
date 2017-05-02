@@ -25,6 +25,7 @@ liblinear-2.11:
   make clean; make;
   cd matlab
   # Edit makefile with matlab install (e.g. /usr/local/MATLAB/R2015a)
+  # changed predict and train to predictDense and trainDense! (c files and in make)
   make;
   # produced train.mexa64 and predict.mexa64 as expected
 
