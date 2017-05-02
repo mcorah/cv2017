@@ -1,11 +1,11 @@
 function paths = getPaths(doMkdir)
 	%% Data dir
-	paths.dataDir = fullfile('/work3/', 'sgupta', 'cvpr13Release', 'data');
+	paths.dataDir = fullfile('/home/micah/courses/Computer_Vision/project', 'data');
 		paths.pcDir = fullfile(paths.dataDir, 'pointCloud');
 		paths.colorImageDir = fullfile(paths.dataDir, 'colorImage');
 
 	%% Cache dir
-	paths.cacheDir = fullfile('/work3', 'sgupta', 'cvpr13Release', 'cachedir');
+	paths.cacheDir = fullfile('/home/micah/courses/Computer_Vision/project', 'cache');
 
 	RUNNAME = 'release';
 	paths.runDir = fullfile(paths.cacheDir, RUNNAME);
@@ -26,7 +26,7 @@ function paths = getPaths(doMkdir)
 	paths.modelDir = fullfile(paths.runDir, 'model');
 		paths.categroySpecificModels = fullfile(paths.modelDir, 'categorySpecific');
 		paths.ucmModels = fullfile(paths.modelDir, 'ucm');
-	
+
 	paths.outDir = fullfile(paths.runDir, 'output');
 		paths.ssOutDir = fullfile(paths.outDir, 'semanticSegmentation');
 		paths.amodalDir = fullfile(paths.outDir, 'amodal');
