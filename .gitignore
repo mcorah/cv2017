@@ -1,3 +1,1 @@
-external/*
-./COM/getPaths.m
-./allBenchmarks/benchmarkPaths.m
+external/
