@@ -1,7 +1,7 @@
 function ucm_o1 = ucm2channelsGT(ucm2, thr, nthr_ori, angSpan)
 	if nargout<4, angSpan = 1; end
-		
-	ucm = resample_ucm2_orient_new(ucm2,thr,nthr_ori); 
+
+	ucm = resample_ucm2_orient_new(ucm2,thr,nthr_ori);
 	ucm_o1 = quantize_ucm_or(ucm, 8, angSpan);
 end
 
@@ -21,7 +21,7 @@ function ucm = resample_ucm2_orient_new(ucm2, min_thr, nthresh)
 		seg = labels2(2:2:end, 2:2:end);
 		bdry = seg2bdry(seg);
 		ucm.strength = max(ucm.strength, thresh(t)*bdry);
-		
+
 		[seg_ori] = get_segmentation_orientation(bdry(3:2:end,3:2:end));
 		ucm.orient = max(ucm.orient,(ucm.orient==0).*seg_ori);
 		old = bw;
@@ -30,6 +30,7 @@ end
 
 function [seg_ori] = get_segmentation_orientation(seg_bw)
 
+  disp('seg orientation/2channel fit contour')
 	contours = fit_contour(double(seg_bw));
 	angles = zeros(numel(contours.edge_x_coords), 1);
 
@@ -41,7 +42,7 @@ function [seg_ori] = get_segmentation_orientation(seg_bw)
 		if v1(2) == v2(2),
 			ang = pi/2;
 		else
-			ang = -atan((v2(1)-v1(1)) / (v2(2)-v1(2))); 
+			ang = -atan((v2(1)-v1(1)) / (v2(2)-v1(2)));
 		end
 		if ang >0,
 			angles(e) = ang;

@@ -5,9 +5,9 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 %	mcN is th eangle betweent he 2 planes
 %	smcN is the sign of the N gradient
 % Input:
-%	pc is the point cloud, 
-%	pcf is the filled in point cloud, 
-% 	rr determines the offset at which we want to look up the normals to compute the angle between them 
+%	pc is the point cloud,
+%	pcf is the filled in point cloud,
+% 	rr determines the offset at which we want to look up the normals to compute the angle between them
 %	sigmaSpace is the sigma for the gaussian to estimate the normals
 % 	qzc is used to convert the Z value at a pixel into disparity, and to estimate the error at a particular depth.
 %	nori is the number of orientations
@@ -21,7 +21,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 	mcD = zeros([size(Z) nori]);
 
 	thetaQ = -([0:1:(nori-1)]./nori*pi - pi/2);
-	
+
 	N{1} = NaN([size(Z) 3]);
 	N{2} = NaN([size(Z) 3]);
 	D{1} = NaN([size(Z) 3]);
@@ -29,7 +29,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 	cntr{1} = NaN([h w 3]);
 	cntr{2} = NaN([h w 3]);
 	xyz = cat(3, Xf, Yf, Zf);
-	
+
 	% qZ1 = qzc*ordfilt2(Zf,1,ones(2*rr+1)).^2;
 	se = strel(ones(2*rr+1));
 	qZ2 = qzc*((-imdilate(-Zf, se)).^2);
@@ -44,7 +44,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 		theta = theta-thetaQ(k);
 		[pos(:,:,1) pos(:,:,2)] = pol2cart(theta, r);
 
-		% Point offsets at which we want to compare the features at 
+		% Point offsets at which we want to compare the features at
 		anchorI = [-(rr+1)/2, (rr+1)/2];
 		anchorJ = [0 0];
 		[theta, r] = cart2pol(anchorI, anchorJ);
@@ -54,7 +54,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 
 		pos(:,:,2) = pos(:,:,2)/2; %sqrt(2);
 
-		one_Z = 1./Z; 
+		one_Z = 1./Z;
 		X_Z = X./Z;
 		Y_Z = Y./Z;
 		one = Z; one(~isnan(one)) = 1;
@@ -66,7 +66,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 		AtARaw(isnan(AtARaw)) = 0;
 		AtbRaw(isnan(AtbRaw)) = 0;
 
-		AtA = filterItChopOffIS(cat(3, AtARaw, AtbRaw), pos, Zf, qzc, sigmaDisparity, sigmaSpace);	
+		AtA = filterItChopOffIS(cat(3, AtARaw, AtbRaw), pos, Zf, qzc, sigmaDisparity, sigmaSpace);
 		Atb = AtA(:, :, (size(AtARaw,3)+1):end);
 		AtA = AtA(:, :, 1:size(AtARaw,3));
 
@@ -84,11 +84,11 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 		bboth = bsxfun(@rdivide, bboth, sqrt(sum(Nboth.^2,3)));
 		Nboth = bsxfun(@rdivide, Nboth, sqrt(sum(Nboth.^2,3)));
 		%Dboth  = xyz - bsxfun(@times, (sum(Nboth.*xyz, 3) + b), Nboth);
-	
-		Nboth = padarray(Nboth, [Rpad Rpad 0], 'replicate', 'both'); 
-		bboth = padarray(bboth, [Rpad Rpad 0], 'replicate', 'both'); 
-		XYZ = padarray(xyz, [Rpad Rpad 0], 'replicate', 'both'); 
-	
+
+		Nboth = padarray(Nboth, [Rpad Rpad 0], 'replicate', 'both');
+		bboth = padarray(bboth, [Rpad Rpad 0], 'replicate', 'both');
+		XYZ = padarray(xyz, [Rpad Rpad 0], 'replicate', 'both');
+
 		stI = round(Rpad+1+anchorI(1));
 		enI = stI+(h-1);
 		stJ = round(Rpad+1+anchorJ(1));
@@ -97,7 +97,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 		b{1} = bboth(stI:enI, stJ:enJ, :);
 		D{1} = xyz - bsxfun(@times, (sum(N{1}.*xyz, 3) + b{1}), N{1});
 		cntr{1} = XYZ(stI:enI, stJ:enJ, :);
-		
+
 		stI = round(Rpad+1+anchorI(2));
 		enI = stI+(h-1);
 		stJ = round(Rpad+1+anchorJ(2));
@@ -110,7 +110,7 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 		mcN(:,:,k) = 1-abs(sum(N{1}.*N{2}, 3));
 		mcD(:,:,k) = sqrt(sum((D{1} - D{2}).^2, 3));
 		fprintf('.');
-		
+
 		% Making the normals consistent.
 		for i = 1:2,
 			N{i} = N{i}.*repmat(sign(N{i}(:,:,3)),[1 1 3]);
@@ -121,8 +121,8 @@ function [mcD mcN smcN] = depthCuesHelper(pc, pcf, rr, sigmaSpace, qzc, nori, si
 
 		% Computing the orientation for the normal discontinuity
 		smcN(:,:,k) = sign(sum((N{1}-N{2}).*(cntr{1}-cntr{2}),3));
-		mcD(:,:,k) = mcD(:,:,k).*(mcD(:,:,k) > qZ*1.05);	
-		
+		mcD(:,:,k) = mcD(:,:,k).*(mcD(:,:,k) > qZ*1.05);
+
 		fprintf('%d ',k);
 	end
 

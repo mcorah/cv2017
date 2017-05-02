@@ -25,7 +25,7 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
 	% Find normals for each region
 	[NR b gr grr nSamples] = computeRegionNormals(pc, superpixels, sp2reg);
 	NRRot = R'*NR;
-	
+
 	%Feature 1 angle with the gravity vector.
 	tic;
 	angl = acosd(sum(bsxfun(@times, N, reshape(yDir,[1 1 3])),3));
@@ -42,7 +42,7 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
 	allDist = cell2mat(allDist);
 	F{2} = allDist;
 	fprintf('Planarity Features : %0.3f seconds.\n',toc);
-	
+
 	%Feature 3 is the normal and the bias for the plane, and the area in the image.
 	tic;
 	F{3} = [NRRot; b./100; log(regArea)];
@@ -54,7 +54,7 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
 	xR = pcRot(:,:,1);
 	yR = -pcRot(:,:,2);
 	zR = pcRot(:,:,3);
-	
+
 	ef = @(i) extentFeatures(xR, yR, zR, i, sp2reg, superpixels);
 	eF = arrayfun(ef, 1:nReg, 'UniformOutput', false);
 	F{4} = cell2mat(eF);
@@ -66,7 +66,7 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
 	x = pc(:,:,1);
 	y = -pc(:,:,2);
 	z = pc(:,:,3);
-	F{5} = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels); 
+	F{5} = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels);
 	fprintf('Area Features : %0.3f seconds.\n',toc);
 	%F{6} = areaFeaturesBatch(x, y, z, N, yR, yDir, sp2reg, superpixels); 
 
@@ -144,12 +144,12 @@ function f = orientedEnergy(bg, sp2reg, superpixels)
 	end
 	regEnergy = bsxfun(@times, regEnergy, 1./regArea);
 	f = regEnergy;
-	g = bsxfun(@times, regEnergy, 1./sqrt(sum(regEnergy.^2,1)+ep^2)); 
+	g = bsxfun(@times, regEnergy, 1./sqrt(sum(regEnergy.^2,1)+ep^2));
 	f = [f; g];
 end
 
 function f = clippingFeatures(i, sp2reg, superpixels)
-	ind = ismember(superpixels, find(sp2reg(:,i))); 
+	ind = ismember(superpixels, find(sp2reg(:,i)));
 	t = regionprops(ind, 'Perimeter');
 	p = sum(cat(1,t.Perimeter))+1;
 	tol = 2;
@@ -161,7 +161,7 @@ function f = contourFeatures(zg, zGood, i, sp2reg, superpixels)
 	%zg is a 3 channel thing.
 	rad = 5;
 	regO = ismember(superpixels,find(sp2reg(:,i)));
-	
+
 	%imerode the region
 	reg{1} = imerode(regO,strel('disk',rad));
 	reg{2} = imdilate(regO,strel('disk',rad));
@@ -214,7 +214,7 @@ function f = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels)
 	ar = accumarray(superpixels(ind),dArea(ind), [nSP 1]);
 	f(1,:) = ar'*sp2reg; %Surface area of the region in space using only what is available for measrement
 	f(2,:) = ar'*sp2reg./(goodSPArea'*sp2reg).*(spArea'*sp2reg); %Surface area of region scaled by the amount of missing pixels in the superpixels.
-	
+
 	%Horizontal area
 	%Find the horizontal pixels and find there area
 	angl = max(min(sum(bsxfun(@times, reshape(yDir,[1 1 3]), N),3),1),-1);
@@ -223,7 +223,7 @@ function f = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels)
 	%Horizontal Area and height of horizontal features.
 	ind = angl < 0+del & ~isnan(dArea);
 	ar = accumarray(superpixels(ind),dArea(ind), [nSP 1], @sum, 0);
-	f(3,:) = ar'*sp2reg; 
+	f(3,:) = ar'*sp2reg;
 	ind = angl < 0+del & ~isnan(yR);
 	ar = accumarray(superpixels(ind),yR(ind),[nSP 1],@sum, 0);
 	cnt = accumarray(superpixels(ind),superpixels(ind) > 0,[nSP 1],@sum, 0);
@@ -232,10 +232,10 @@ function f = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels)
 		reg = ismember(superpixels, find(sp2reg(:,i))) & ind;
 		f(5,i) = median([yR(reg); 0]);
 	end
-	
+
 	ind = angl > 180-del & ~isnan(dArea);
 	ar = accumarray(superpixels(ind),dArea(ind), [nSP 1], @sum, 0);
-	f(6,:) = ar'*sp2reg; 
+	f(6,:) = ar'*sp2reg;
 	ind = angl > 180-del & ~isnan(yR);
 	ar = accumarray(superpixels(ind),yR(ind),[nSP 1],@sum, 0);
 	cnt = accumarray(superpixels(ind),superpixels(ind) > 0,[nSP 1],@sum, 0);
@@ -245,8 +245,8 @@ function f = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels)
 		f(8,i) = median([yR(reg); 0]);
 	end
 
-	%pts = [x(superpixels(:) == 6) y(superpixels(:) == 6) z(superpixels(:) == 6)];   
- 	%pts = pts(~isnan(pts(:,1)),:);                                                  
+	%pts = [x(superpixels(:) == 6) y(superpixels(:) == 6) z(superpixels(:) == 6)];
+ 	%pts = pts(~isnan(pts(:,1)),:);
  	%ind = convhull(pts(:,3),pts(:,2));
  	%polyarea(pts(ind,3),pts(ind,2))
 

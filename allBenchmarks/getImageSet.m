@@ -18,10 +18,10 @@ function [imName, im] = getImageSet(imSet, fileName)
 				eval(sprintf('im = im(%s:%s:%s);', a{2}, a{3}, a{4}));
 			end
 		catch
-		
+
 		end
 	end
-	
+
 	for i = 1:length(im)
 		imName{i} = sprintf('img_%04d', im(i));
 	end

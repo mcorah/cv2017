@@ -26,15 +26,15 @@ function [ucm_sigmoid, ucm_raw, ws_wt2] = contours2ucm_RGBD(pb_oriented, pb_wt, 
 [ws_wt] = create_finest_partition(pb_oriented);
 
 if nargin>1,
-    
+
     % align old and new signal
     pb_wt(2:end,2:end)=pb_wt(1:end-1,1:end-1);
     pb_wt(1,:)=pb_wt(2,:); pb_wt(:,1)=pb_wt(:,2);
     pb_wt = pb_wt.*(ws_wt>0);
-    
+
     ws_wt(ws_wt>thr)=thr;
     ws_wt=ws_wt+pb_wt;
-    
+
 end
 
 % prepare pb for ucm
@@ -60,6 +60,7 @@ pb = max(pb_oriented,[],3);
 ws = watershed(pb);
 ws_bw = (ws == 0);
 
+disp('RGBD fit countour')
 contours = fit_contour(double(ws_bw));
 angles = zeros(numel(contours.edge_x_coords), 1);
 
@@ -67,7 +68,7 @@ for e = 1 : numel(contours.edge_x_coords)
     if contours.is_completion(e), continue; end
     v1 = contours.vertices(contours.edges(e, 1), :);
     v2 = contours.vertices(contours.edges(e, 2), :);
-    
+
     if v1(2) == v2(2),
         ang = 90;
     else
@@ -130,12 +131,12 @@ R = regionprops(bwlabel(artifacts), 'PixelList');
 for r = 1 : numel(R),
     xc = R(r).PixelList(1,2);
     yc = R(r).PixelList(1,1);
-    
+
     vec = [ max(ws_clean(xc-2, yc-1), ws_clean(xc-1, yc-2)) ...
         max(ws_clean(xc+2, yc-1), ws_clean(xc+1, yc-2)) ...
         max(ws_clean(xc+2, yc+1), ws_clean(xc+1, yc+2)) ...
         max(ws_clean(xc-2, yc+1), ws_clean(xc-1, yc+2)) ];
-    
+
     [nd,id] = min(vec);
     switch id,
         case 1,
@@ -145,7 +146,7 @@ for r = 1 : numel(R),
             else
                 ws_clean(xc, yc-1) = vec(1);
                 ws_clean(xc-1, yc) = 0;
-                
+
             end
             ws_clean(xc-1, yc-1) = vec(1);
         case 2,
@@ -157,7 +158,7 @@ for r = 1 : numel(R),
                 ws_clean(xc+1, yc) = 0;
             end
             ws_clean(xc+1, yc-1) = vec(2);
-            
+
         case 3,
             if ws_clean(xc+2, yc+1) < ws_clean(xc+1, yc+2),
                 ws_clean(xc, yc+1) = 0;

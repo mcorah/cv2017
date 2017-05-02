@@ -1,6 +1,7 @@
 function [seg_ori] = get_segmentation_orientation(seg_bw)
 
 
+disp('get segmentation fit countour')
 contours = fit_contour(double(seg_bw));
 angles = zeros(numel(contours.edge_x_coords), 1);
 
@@ -12,7 +13,7 @@ for e = 1 : numel(contours.edge_x_coords)
     if v1(2) == v2(2),
         ang = pi/2;
     else
-        ang = -atan((v2(1)-v1(1)) / (v2(2)-v1(2))); 
+        ang = -atan((v2(1)-v1(1)) / (v2(2)-v1(2)));
     end
     if ang >0,
         angles(e) = ang;
