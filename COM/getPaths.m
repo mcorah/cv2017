@@ -1,11 +1,11 @@
 function paths = getPaths(doMkdir)
 	%% Data dir
-	paths.dataDir = fullfile('/home/micah/courses/Computer_Vision/project', 'data');
+	paths.dataDir = fullfile('/home/Documents/CV_project', 'data');
 		paths.pcDir = fullfile(paths.dataDir, 'pointCloud');
 		paths.colorImageDir = fullfile(paths.dataDir, 'colorImage');
 
 	%% Cache dir
-	paths.cacheDir = fullfile('/home/micah/courses/Computer_Vision/project', 'cache');
+	paths.cacheDir = fullfile('/home/Documents/CV_project', 'cache');
 
 	RUNNAME = 'release';
 	paths.runDir = fullfile(paths.cacheDir, RUNNAME);
@@ -35,7 +35,7 @@ function paths = getPaths(doMkdir)
 	%% Path for the image stack library ..
 	pathstr = fileparts(mfilename('fullpath'));
 		paths.siftLib = fullfile(pathstr, '..', 'external', 'colorDescriptor');
-		paths.imageStackLib = fullfile(pathstr, '..', 'external', 'ImageStack');
+		paths.imageStackLib = fullfile(pathstr, '..', 'external', 'ImageStack', 'bin', 'ImageStack');
 
 	if(exist('doMkdir', 'var') && doMkdir)
 		f = fieldnames(paths);
