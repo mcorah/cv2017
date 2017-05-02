@@ -68,7 +68,6 @@ function features = genericFeatures(superpixels, sp2reg, param, data)
 	z = pc(:,:,3);
 	F{5} = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels);
 	fprintf('Area Features : %0.3f seconds.\n',toc);
-	%F{6} = areaFeaturesBatch(x, y, z, N, yR, yDir, sp2reg, superpixels); 
 
 
 	%Contour features.
@@ -259,51 +258,6 @@ function f = areaFeatures(x, y, z, N, yR, yDir, sp2reg, superpixels)
 	missingArea = accumarray(superpixels(:), isnan(x(:)))';
 	spArea = accumarray(superpixels(:), 1)';
 	f(10,:) = (missingArea*sp2reg)./(spArea*sp2reg);
-end
-
-
-function f = areaFeaturesBatch(x, y, z, N, yR, yDir, sp2reg, superpixels)
-	%Calculate the angle of each patch with the viewing direction.
-	fx = 520;
-	fy = 520;
-	del = 15;
-	nSP = max(superpixels(:));
-	angl = abs(sum(N.*cat(3,x,y,z),3)./sqrt(sum(cat(3,x,y,z).^2,3)));
-	%Area of the surface
-	dArea = (z.*z./angl)./(fx.*fy);
-	ind = find(~isnan(dArea));
-
-	spArea = accumarray(superpixels(:), superpixels(:) > 0,[nSP 1]);
-	goodSPArea = accumarray(superpixels(ind), superpixels(ind) > 0,[nSP 1]);
-	f(1,:) = accumarray(superpixels(ind),dArea(ind), [nSP 1]);
-	f(2,:) = f(1,:)./goodSPArea'.*spArea';
-	
-	%Horizontal area
-	%Find the horizontal pixels and find there area
-	angl = max(min(sum(bsxfun(@times, reshape(yDir,[1 1 3]), N),3),1),-1);
-	angl = acosd(angl);
-	
-	ind = angl < 0+del & ~isnan(dArea);
-	ar = accumarray(superpixels(ind),dArea(ind), [nSP 1], @sum, 0);
-	f(3,:) = ar; 
-	ind = angl < 0+del & ~isnan(yR);
-	f(4,:) = accumarray(superpixels(ind),yR(ind),[nSP 1],@mean);
-	
-	ind = angl > 180-del & ~isnan(dArea);
-	ar = accumarray(superpixels(ind),dArea(ind), [nSP 1], @sum, 0);
-	f(5,:) = ar; 
-	ind = angl > 180-del & ~isnan(yR);
-	f(6,:) = accumarray(superpixels(ind),yR(ind),[nSP 1],@mean);
-	
-	%pts = [x(superpixels(:) == 6) y(superpixels(:) == 6) z(superpixels(:) == 6)];   
- 	%pts = pts(~isnan(pts(:,1)),:);                                                  
- 	%ind = convhull(pts(:,3),pts(:,2));
- 	%polyarea(pts(ind,3),pts(ind,2))
-
-	%Vertical area
-	ind = angl > 90-del & angl < 90+del & ~isnan(dArea);
-	ar = accumarray(superpixels(ind), dArea(ind), [nSP 1]);
-	f(7,:) = ar;
 end
 
 function f = extentFeatures(x, y, z, i, sp2reg, superpixels)
