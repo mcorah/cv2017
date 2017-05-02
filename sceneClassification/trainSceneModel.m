@@ -1,4 +1,4 @@
-function [modelFile, model] = trainSceneModel(imSet, paths, typ, classMapping, sceneMapping, objectDir), 
+function [modelFile, model] = trainSceneModel(imSet, paths, typ, classMapping, sceneMapping, objectDir),
 
 	train = imSet{1};
 	val = imSet{2};
@@ -6,10 +6,10 @@ function [modelFile, model] = trainSceneModel(imSet, paths, typ, classMapping, s
 	pt = getMetadata(sceneMapping);
 	numScene = length(pt.sceneName);
 	sceneName = pt.sceneName;
-	
+
 	pt = getMetadata(classMapping);
 	numObjectClass = length(pt.className);
-	
+
 	imSet = {train, val}; useVal = 1;
 	imList{1} = getImageSet(imSet{1});
 	imList{2} = getImageSet(imSet{2});
@@ -23,7 +23,7 @@ function [modelFile, model] = trainSceneModel(imSet, paths, typ, classMapping, s
 	% Load the features.
 	for i = 1:2,
 		clear f;
-		parfor j = 1:length(imList{i}),
+		for j = 1:length(imList{i}),
 			f{j} = getSceneFeatures(imList{i}{j}, paths, trainingParam.featureParam);
 		end
 		F{i} = cat(2, f{:});
@@ -35,7 +35,7 @@ function [modelFile, model] = trainSceneModel(imSet, paths, typ, classMapping, s
 		Y{i} = gt{i};
 		W{i} = ones(size(Y{i}));
 	end
-	
+
 	svmParam = trainingParam.classifierParam;
 
 	model = svmMulticlassTrain(X, Y, W, svmParam);

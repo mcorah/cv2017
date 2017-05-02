@@ -7,16 +7,16 @@ function [feature sp spArea gt] = loadExamples(imList, paths, param, toTrain)
 	featureParam = param.featureParam;
 
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		fprintf('.');
 		imName = imList{i};
 
 		[iF iSP iSpArea] = getSPFeatures(imName, paths, featureParam);
-		
+
 		spArea{i}(1,:) = iSpArea;
 		sp{i} = iSP;
 		if(isfield(featureParam, 'selF'))
-			feature{i} = iF(featureParam.selF,:);	
+			feature{i} = iF(featureParam.selF,:);
 		else
 			feature{i} = iF;
 		end
@@ -25,7 +25,7 @@ function [feature sp spArea gt] = loadExamples(imList, paths, param, toTrain)
 		if(toTrain)
 			gtParam = param.gtParam;
 			gtLabel = getGroundTruth(imName, 'segmentation', gtParam.classMapping);
-			
+
 			spHist = cell2mat(accumarray(iSP(:), gtLabel(:), [], @(x){linIt(histc(x,0:gtParam.numClass))})');
 			spHist = bsxfun(@times, spHist, 1./(1+sum(spHist,1)));
 			spHist = spHist(2:end,:);

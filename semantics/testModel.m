@@ -16,7 +16,7 @@ function [softOutputDir hardOutputDir] = testModel(imSet, paths, modelFileName)
 	if(~exist(softOutputDir, 'dir')) mkdir(softOutputDir); end
 	if(~exist(hardOutputDir, 'dir')) mkdir(hardOutputDir); end
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		f = feature{i};
 		s2 = []; p2 = [];
 	

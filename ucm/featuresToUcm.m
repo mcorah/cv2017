@@ -6,7 +6,7 @@ function featuresToUcm(trainSet, paths, imSet)
 	end
 	imList = getImageSet(imSet);
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		imName = imList{i};
 		fileName = fullfile(paths.ucmFDir, sprintf('%s.mat', imName));
 		dt = load(fileName);

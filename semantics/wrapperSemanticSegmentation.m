@@ -1,4 +1,4 @@
-paths = getPaths();
+paths = getPaths(true);
 
 %% Create the file for storing the results
 allResultsFileName = fullfile(paths.outDir, 'allSSResults.mat');
@@ -10,8 +10,8 @@ end
 %  dt = load(fullfile(paths.modelDir, 'allBUSResults.mat'));
 %  ucmThresh = dt.th.ucmThresh;
 
-f = struct('computeGeneric', true, 'computeCategorySpecific', true, 'ablationStudy', true, ...
-	'full', true, 'scene', true, 'sceneF', true, 'fullScene', true);
+f = struct('computeGeneric', false, 'computeCategorySpecific', false, 'ablationStudy', false, ...
+	'full', false, 'scene', true, 'sceneF', true, 'fullScene', false);
 
 % Compute the genericlassifier, sift and g texton features
 if(f.computeGeneric)

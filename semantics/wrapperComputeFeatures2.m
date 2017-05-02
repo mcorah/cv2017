@@ -34,27 +34,27 @@ function wrapperComputeFeatures2(typ, cSet)
 
 
 	%% Collect these SVMs!
-	fileSuffix = trainingParam.fileSuffix; 
+	fileSuffix = trainingParam.fileSuffix;
 	for i = 1:numClass,
 		% Call a function that trains the SVMs for category i.
-		modelFile = fullfile(paths.modelDir, trainingParam.featureParam.featureCacheName, strcat(sprintf('%s_%02d', trainingParam.classifierFileName, i), '.mat')); 
+		modelFile = fullfile(paths.modelDir, trainingParam.featureParam.featureCacheName, strcat(sprintf('%s_%02d', trainingParam.classifierFileName, i), '.mat'));
 		dt = load(modelFile);
 		s.models(i) = dt.model;
 		s.ap(i) = dt.ap;
 		s.param = dt.param;
 	end
-	modelFile = fullfile(paths.modelDir, strcat(sprintf('%s', trainingParam.classifierFileName), '.mat')); 
+	modelFile = fullfile(paths.modelDir, strcat(sprintf('%s', trainingParam.classifierFileName), '.mat'));
 	save(modelFile, '-STRUCT', 's');
 
 	%% Generate category specific features, using the collected SVMs
-	modelFile = fullfile(paths.modelDir, strcat(sprintf('%s', trainingParam.classifierFileName), '.mat')); 
+	modelFile = fullfile(paths.modelDir, strcat(sprintf('%s', trainingParam.classifierFileName), '.mat'));
 	dt = load(modelFile);
 	models = dt.models;
-	
+
 	imList = getImageSet(cSet);
 	mkdir(fullfile(paths.featuresDir, trainingParam.featureParam.featureCacheName));
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		categorySpecificFeatures(imList{i}, paths, dt.param, models);
 	end
 end

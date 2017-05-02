@@ -27,7 +27,7 @@ function wrapperComputeFeatures1(imSet, ucmThresh)
 
 	spParam.ucmThresh = ucmThresh; % = 34/255;
 
-	normalParam.patchSize = [3 10];  
+	normalParam.patchSize = [3 10];
 
 	genericParam.fName = @genericFeatures;
 
@@ -42,22 +42,22 @@ function wrapperComputeFeatures1(imSet, ucmThresh)
 
 	% Load the dictionary
 	dt = load('codebook_opp_s1.2_K1000_2000.mat');
-	vocab = dt.vocab; 
-	siftMapParam.dimensions = size(vocab, 2); 
+	vocab = dt.vocab;
+	siftMapParam.dimensions = size(vocab, 2);
 	siftMapParam.siftParam = struct('ds_sampling', 1, 'scales', 1.2, 'descriptor', 'opponentsift');
 	siftMapParam.typ = 'colorSift';
 
 	siftBOWParam.fName = @bowFeatures;
 	siftBOWParam.dimensions = siftMapParam.dimensions;
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		% Load the point cloud
 		tt = tic();
 		I = getColorImage(imList{i});
 		pc = getPointCloud(imList{i});
 		[superpixels, ucm, nSP, spArea] = getSuperpixels(imList{i}, spParam.ucmThresh);
 		[clusters] = getAmodalCompletion(imList{i});
-		
+
 		% Load the zg gradients
 		[zgMax, bgMax, bgOriented] = getLocalGradients(imList{i});
 
@@ -78,14 +78,14 @@ function wrapperComputeFeatures1(imSet, ucmThresh)
 		% Compute sift map and features
 		siftData = struct('I', I, 'vocab', vocab);
 		[map dimensions] = computeMap(imList{i}, paths, siftMapParam, siftData);
-		
+
 		siftData = struct('map', map, 'clusters', clusters, 'superpixels', superpixels);
 		[f, sp2reg] = computeFeatures(imList{i}, paths, 'colorSift', siftBOWParam, siftData);
 
 		%  % Compute geocentric texton maps and features
 		gTextonData = struct('pc', pc, 'N', N1, 'yDir', yDir);
 		[map, dimensions] = computeMap(imList{i}, paths, gTextonMapParam, gTextonData);
-		
+
 		gTextonData = struct('map', map, 'clusters', clusters, 'superpixels', superpixels);
 		[f, sp2reg] = computeFeatures(imList{i}, paths, 'gTexton', gTextonBOWParam, gTextonData);
 

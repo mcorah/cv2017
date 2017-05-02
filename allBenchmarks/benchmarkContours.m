@@ -13,23 +13,23 @@ function [evalResContours, evalResRegions] = benchmarkContours(ucmDir, modelname
 	% Run the evaluatons..
 	inDir = ucmDir;
 	outDir = bDir;
-	gtDir = c.benchmarkGtDir; 
+	gtDir = c.benchmarkGtDir;
 
-	parfor i = 1:length(imList),
+	for i = 1:length(imList),
 		imName = imList{i};
 		inFile = fullfile(inDir, strcat(imName, '.mat'));
 		gtFile = fullfile(gtDir, strcat(imName, '.mat'));
-    	
+
 		evFile4 = fullfile(outDir, strcat(imName, '_ev4.txt'));
 		evFile1 = fullfile(outDir, strcat(imName,'_ev1.txt'));
 		evFile2 = fullfile(outDir, strcat(imName, '_ev2.txt'));
 		evFile3 = fullfile(outDir, strcat(imName, '_ev3.txt'));
 
-		try 
-			if isempty(dir(evFile1)), 
+		try
+			if isempty(dir(evFile1)),
 				evaluation_bdry_image(inFile, gtFile, evFile1, param.nthresh, param.maxDist, param.thinpb);
-			end	
-			if isempty(dir(evFile4)), 
+			end
+			if isempty(dir(evFile4)),
 				evaluation_reg_image(inFile, gtFile, evFile2, evFile3, evFile4, param.nthresh);
 			end
 		catch e
@@ -45,8 +45,8 @@ function [evalResContours, evalResRegions] = benchmarkContours(ucmDir, modelname
 	thresh = out(:,1);
 	R = out(:,2);
 	P = out(:,3);
-	F = out(:,4); 
-	
+	F = out(:,4);
+
 	evalResContours = struct('bestF', bestF, 'bestP', bestP, 'bestR', bestR', 'bestT', bestT, ...
 		'F_max', F_max, 'P_max', P_max, 'R_max', R_max', 'Area_PR', Area_PR,...
 		'thresh', thresh, 'F', F, 'P', P, 'R', R);
@@ -69,7 +69,7 @@ function [evalResContours, evalResRegions] = benchmarkContours(ucmDir, modelname
 
 	evalResRegions = struct('ods', ods, 'ois', ois, 'bestC', bestC, ...
 		'randIods', randIods, 'randIois', randIois, 'varIods', varIods, 'varIois', varIois);
-	
+
 	%% Also save the results in there as a mat.
 	fileName = strcat(bDir, '.mat');
 	fileName = fullfile(sprintf('%s-eval-%s.mat', ucmDir, imSet));
