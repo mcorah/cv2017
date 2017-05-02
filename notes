@@ -3,6 +3,10 @@
 ###########################
 
 BSR:
+  # Make sure you copy the revised
+  # external/buildW.cpp and external/buildW.cpp.patch files to BSR/grouping/source/buildW
+  # external/match_segmentations2.m, external/match_segmentations2.m.patch to BSR/bench/benchmarks,
+  # external/ucm_mean_pb.cpp and external/ucm_mean_pb.cpp.patch files to BSR/grouping/source/ucm
   cd grouping/source
   # see readme
   # possibly slightly modify ld_preload
@@ -40,8 +44,8 @@ colordescriptors:
 
 ImageStack:
   # in makefiles/Makefile.linux
-  # commented out SDL... was not working
-  # commented out fftw
+  # If fftw doesn't work, install libfftw3-dev
+  # If you have dsymlink@GLIBC error, then go into Makefile.common, and in line 81, at the very end after "$(BIN_TARGET)" add "-ldl"
   make -f makefiles/Makefile.linux clean
   make -f makefiles/Makefile.linux
   # build completed, hopefully deleted dependencies aren't critical
@@ -54,6 +58,18 @@ ImageStack:
 # Setup
 #######
 
+Make sure in external/ you have the ImageStack folder named as "ImageStack" and not "imagestack"
+In getPaths, change end of line 38, from "'external', 'ImageStack');" to "'external', 'ImageStack', 'bin', 'ImageStack');"
+If NOT this, then make sure you copy the binary to the top directory as in the ImageStack notes above
+
+In segmentation/computeLocalCues line 6, add
+"
+dName = fullfile(paths.colorCues);
+		if(~exist(dName, 'dir'))
+			mkdir(dName);
+		end
+"
+
 edited paths in COM/getPaths.m and allBenchmarks/benchmarkPaths.m as per
 instructions
 
@@ -65,6 +81,13 @@ There might be a script for these, but otherwise, just create them as you see
 them?
 
 Complains about ucm features? Run ucm stuff first?
+
+#####################
+Reduce training size
+#####################
+
+Use Micah's mini_nyu.m to generate ../data/benchmarkData/metadata/nyusplits_mini.mat
+In allBenchmarks/getImageSet.m, change line 4 from "fName = 'nyusplits';" to "fName = 'nyusplits_mini';"
 
 Seems that they have a bunch of files of the form wrapper*.m to compute the
 various steps.
