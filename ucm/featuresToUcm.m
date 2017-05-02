@@ -41,7 +41,7 @@ function scores = svm_do_predict(svm_model, features)
 
 	features = vl_homkermap(features', svm_model.vlfeat_N, svm_model.KERNEL_TYPE);%0.9.14
 	features = sparse(double(features));
-	[predicted_label, accuracy, scores] = predict(labels, features, svm_model, '-b 1', 'col');
+	[predicted_label, accuracy, scores] = predictLinear(labels, features, svm_model, '-b 1', 'col');
 	id=find(svm_model.Label==1);
 	scores = scores(:,id);
 end
